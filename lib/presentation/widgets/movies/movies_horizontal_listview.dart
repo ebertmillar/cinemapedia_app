@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:cinemapedia_app/config/domain/entities/movie.dart';
 import 'package:flutter/material.dart';
 
@@ -7,13 +8,12 @@ class MoviesHorizontalListview extends StatelessWidget {
   final String? subTitle;
   final VoidCallback? loadNextPage;
 
-  const MoviesHorizontalListview({
-    super.key,
-    required this.movies,
-    this.title,
-    this.subTitle,
-    this.loadNextPage
-  });
+  const MoviesHorizontalListview(
+      {super.key,
+      required this.movies,
+      this.title,
+      this.subTitle,
+      this.loadNextPage});
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +21,87 @@ class MoviesHorizontalListview extends StatelessWidget {
       height: 350,
       child: Column(
         children: [
-          if(title != null || subTitle != null)
+          if (title != null || subTitle != null)
             _Title(title: title, subTitle: subTitle),
+          Expanded(
+              child: ListView.builder(
+            itemCount: movies.length,
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            itemBuilder: (context, index) {
+              return _Slide(movie: movies[index],);
+            },
+          )),
+        ],
+      ),
+    );
+  }
+}
 
+class _Slide extends StatelessWidget {
+
+  final Movie movie;
+
+  const _Slide({required this.movie});
+
+  @override
+  Widget build(BuildContext context) {
+
+    final titleStyle = Theme.of(context).textTheme;
+
+    return Container(
+      margin:  const EdgeInsets.symmetric(horizontal: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          //Imagen
+          SizedBox(
+            width: 150,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.network(
+                movie.posterPath,
+                fit: BoxFit.cover,
+                width: 150,
+                loadingBuilder: (context, child, loadingProgress){
+                  if( loadingProgress != null){
+                    return const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Center(child: CircularProgressIndicator(strokeWidth: 2)),
+                    );
+                  }
+                  return FadeInRight(child: Image.network(movie.posterPath)); 
+                }
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 5),
+
+          //Texto- titutlo
+          SizedBox(
+            width: 150,
+            child: Text(
+              movie.title,
+              maxLines: 2,
+              style: titleStyle.titleSmall,
+            ),
+          ),
+
+          //Rating - star
+          Row(
+            children: [
+              Icon ( Icons.star_half_outlined, color: Colors.yellow.shade900),
+              const SizedBox(width: 3),
+              Text(
+                '${movie.voteAverage}', 
+                style: titleStyle.bodyMedium?.copyWith(color: Colors.yellow.shade900),
+              ),
+              const SizedBox(width: 10),
+              Text('${movie.popularity}', style: titleStyle.bodySmall,)
+            ],
+          ),
         ],
       ),
     );
@@ -31,7 +109,6 @@ class MoviesHorizontalListview extends StatelessWidget {
 }
 
 class _Title extends StatelessWidget {
-
   final String? title;
   final String? subTitle;
 
@@ -39,7 +116,6 @@ class _Title extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final titleStyle = Theme.of(context).textTheme.titleLarge;
 
     return Container(
@@ -47,22 +123,13 @@ class _Title extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 30),
       child: Row(
         children: [
-
-          if( title != null)
-            Text(title!, style: titleStyle),
-
+          if (title != null) Text(title!, style: titleStyle),
           const Spacer(),
-          
-          if( subTitle != null)
+          if (subTitle != null)
             FilledButton.tonal(
-              style: const ButtonStyle(visualDensity: VisualDensity.compact) ,
-              onPressed: (){}, 
-              child: Text(subTitle!)
-            )
-            
-
-
-
+              style: const ButtonStyle(visualDensity: VisualDensity.compact),
+              onPressed: () {},
+              child: Text(subTitle!))
         ],
       ),
     );
