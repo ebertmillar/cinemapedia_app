@@ -69,7 +69,7 @@ class MovieDetail {
         originalTitle: json["original_title"],
         overview: json["overview"],
         popularity: json["popularity"]?.toDouble(),
-        posterPath: json["poster_path"],
+        posterPath: json["poster_path"] ?? '',
         productionCompanies: List<ProductionCompany>.from(json["production_companies"].map((x) => ProductionCompany.fromJson(x))),
         productionCountries: List<ProductionCountry>.from(json["production_countries"].map((x) => ProductionCountry.fromJson(x))),
         releaseDate: DateTime.parse(json["release_date"]),
@@ -164,7 +164,7 @@ class Genre {
 
 class ProductionCompany {
     final int id;
-    final String logoPath;
+    final String? logoPath;
     final String name;
     final String originCountry;
 
@@ -177,7 +177,7 @@ class ProductionCompany {
 
     factory ProductionCompany.fromJson(Map<String, dynamic> json) => ProductionCompany(
         id: json["id"],
-        logoPath: json["logo_path"],
+        logoPath: json["logo_path"] ?? '',
         name: json["name"],
         originCountry: json["origin_country"],
     );
