@@ -16,7 +16,11 @@ typedef GetActorsCallback = Future<List<Actor>> Function(String movieId);
 
 //notifier o control
 class ActorsByMovieNotifier extends StateNotifier<Map<String,List<Actor>>> {
-  
+  //pagina actual
+  int currentPage = 0;
+  bool isLoading = false;
+
+  //buscar mas peliculas
   GetActorsCallback getActors;
 
   ActorsByMovieNotifier({required this.getActors}) : super({});
