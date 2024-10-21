@@ -1,8 +1,11 @@
-import 'package:cinemapedia_app/config/domain/entities/movie.dart';
-import 'package:cinemapedia_app/presentation/providers/movies/movie_info_provider.dart';
-import 'package:cinemapedia_app/presentation/providers/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:cinemapedia_app/config/domain/entities/movie.dart';
+
+import 'package:cinemapedia_app/presentation/providers/providers.dart';
+import 'package:cinemapedia_app/presentation/providers/movies/movie_info_provider.dart';
 
 class MovieScreen extends ConsumerStatefulWidget {
 
@@ -167,14 +170,16 @@ class _ActorByMovie extends ConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 //foto de actor
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: Image.network(
-                    actor.profilePath,
-                    height: 180,
-                    width: 135,
-                    fit: BoxFit.cover,
-
+                FadeInRight(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20),
+                    child: Image.network(
+                      actor.profilePath,
+                      height: 180,
+                      width: 135,
+                      fit: BoxFit.cover,
+                  
+                    ),
                   ),
                 ),
 
@@ -228,6 +233,10 @@ class _CustomSliverAppBar extends StatelessWidget {
                 child: Image.network(
                   movie.posterPath,
                   fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress != null) return const SizedBox();
+                    return FadeIn(child: child);
+                  },
                 ) ,
               ),
 
